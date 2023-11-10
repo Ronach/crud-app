@@ -1,8 +1,10 @@
 Créer le repo Git d'abord
+
 app.fl0.com allows postgreSQL free tier --> github authentification
 workspace = crudd-app
 project = quotes
 then "Connect your Github repo"
+Il y a une demande d'authorisation de d'installation du connector FlO (c.f document d'architecture parlant de connecteurs)
 
 docker build . -t crud-app
 docker run -p 3000:3000 crud-app
