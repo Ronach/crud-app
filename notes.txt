@@ -1,11 +1,27 @@
-Créer le repo Git d'abord
+Créer une application CRUD
+Créer le repo Git d'abord auquel on va connecter FlO ensuite
 
 app.fl0.com allows postgreSQL free tier --> github authentification
+https://app.fl0.com/crudd-app/quotes/dev/crud-app/deployments : l'url de déploiement y figure --> curl https://crud-app-dev-mmah.1.ie-1.fl0.io -v
 workspace = crudd-app
 project = quotes
 then "Connect your Github repo"
 Il y a une demande d'authorisation de d'installation du connector FlO (c.f document d'architecture parlant de connecteurs)
+On déploie en région Irlande
+Chaque push sur la branche main du repo déclenche un build
+
+Dockerfile : https://docs.fl0.com/docs/builds/dockerfile/rust
 
 docker build . -t crud-app
 docker run -p 3000:3000 crud-app
 curl localhost:3000 -v
+
+Ensuite on crée une BDD Postgresv15 avec le nom "database" en US East(Ohio) qui fait 3 GB, a 1GB de RAM et 0,25 vCPU
+Dans "connecting info" on récupère postgres://fl0user:N8YnTG3RPsdo@ep-dark-night-37696724.us-east-2.aws.neon.fl0.io:5432/database?sslmode=require
+$env:DATABASE_URL="postgres://fl0user:N8YnTG3RPsdo@ep-dark-night-37696724.us-east-2.aws.neon.fl0.io:5432/database?sslmode=require"
+cargo install sqlx-cli
+sqlx migrate add "initial database setup" --> crée le dossier migrations/
+sqlx migrate run
+Ajout depuis flO des variables d'environnement puis push du code pour redéployer automatiquement
+curl -sS -H 'Content-Type: application/json' -X POST -d '{"book":"A Game of Thrones", "quote":"Fear cuts deeper than swords"}' https://crud-app-dev-mmah.1.ie-1.fl0.io/quotes | jq
+--CREATE METHOD OK, NOW LET'S CREATE READ--
