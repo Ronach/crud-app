@@ -1,6 +1,5 @@
 mod handlers;
-use axum::http;
-use axum::routing::{get, post, Router};
+use axum::routing::{delete, get, post, put, Router};
 /*
 works with postgres and tokio which is the asynchronous runtime for axum
 tokio est un framework d'exécution asynchrone populaire pour Rust. 
@@ -26,7 +25,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app: Router = Router::new()
     .route("/",get(handlers::health))
-    .route("/quotes", post(handlers::create_quote));
+    .route("/quotes", post(handlers::create_quote))
+    .route("/quotes", get(handlers::read_quotes))
+    .route("/quotes/:id", put(handlers::update_quote))
+    .route("/quotes/:id", delete(handlers::delete_quote))
+    .with_state(pool);
 
     axum::Server::bind(&addr.parse().unwrap())
     .serve(app.into_make_service())
